@@ -45,7 +45,7 @@ const imageInlineSizeLimit = parseInt(
 const useTypeScript = fs.existsSync(paths.appTsConfig);
 
 // style files regexes
-const cssRegex = /\.css$/;
+const cssRegex = /\.(css|less)$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
@@ -86,6 +86,9 @@ module.exports = function(webpackEnv) {
       {
         loader: require.resolve('css-loader'),
         options: cssOptions,
+      },
+      {
+        loader: require.resolve('less-loader')
       },
       {
         // Options for PostCSS as we reference these options twice
@@ -290,6 +293,15 @@ module.exports = function(webpackEnv) {
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         'react-native': 'react-native-web',
+        '@styles': path.join(__dirname, '../src/styles'),
+        '@containers': path.join(__dirname, '../src/containers'),
+        '@components': path.join(__dirname, '../src/components'),
+        '@reducers': path.join(__dirname, '../src/reducers'),
+        '@actions': path.join(__dirname, '../src/actions'),
+        '@utils': path.join(__dirname, '../src/utils'),
+        '@images': path.join(__dirname, '../src/images'),
+		    '@': path.resolve('src'),
+        '@services': path.join(__dirname, '../src/services'),
       },
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding

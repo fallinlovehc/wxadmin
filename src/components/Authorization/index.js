@@ -1,5 +1,6 @@
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
+import { Storage } from '@utils'
 
 class AuthorizedRoute extends React.Component {
 
@@ -7,7 +8,7 @@ class AuthorizedRoute extends React.Component {
     const { component: Component, ...rest } = this.props
     return (
       <Route {...rest} render={props => {
-        return sessionStorage.getItem('adminToken')
+        return Storage.get('adminToken')
           ? <Component {...props} />
           : <Redirect to="/login" />
       }} />
