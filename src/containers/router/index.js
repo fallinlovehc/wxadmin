@@ -1,42 +1,72 @@
 import React, { Component } from 'react';
-import { Redirect, Switch, Route, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
-import Magazine from '@containers/magazine'
-import Order from '@containers/order'
-import Subscribe from '@containers/subscribe'
-import System from '@containers/system'
+
+import AdminHeader from '@components/AdminHeader'
+import Routes from './routes'
 
 import '@styles/common.less'
 
-
-const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
+
+const menuList = [
+    {
+        key: '/magazine',
+        label: '电子刊管理',
+        icon: <Icon type="profile" />,
+    }, {
+        key: '/order',
+        label: '订单管理',
+        icon: <Icon type="ordered-list" />,
+    }, {
+        key: '/subscribe',
+        label: '订阅管理',
+        icon: <Icon type="fire" />,
+    }, {
+        key: '/system',
+        label: '系统管理',
+        icon: <Icon type="apartment" />,
+    }
+]
 
 class Router extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: '电子刊管理',
-            defaultSelectedKeys: '/magazine'
         }
     }
     
     handleRoute = (data) => {
         this.setState({
-            title: data.item.props.children
+            title: data.item.props.children[1]
         });
         this.props.history.push(data.key)
     }
     defaultSelectedKeys = () => {
         const { location } = this.props;
-        return [location.pathname]
+        const t = location.pathname;
+        const y = `/${t.split('/').filter(v => v)[0]}`
+        
+        return [y];
+    }
+    componentDidMount() {
+        const { location } = this.props;
+        const t = location.pathname;
+        const y = `/${t.split('/').filter(v => v)[0]}`
+        for (let v of menuList) {
+            if (v.key === y) {
+                this.setState({
+                    title: v.label
+                })
+            }
+        }
     }
     render() {
         const { title } = this.state;
         return (
             <Layout>
                 <Header className="header">
-                    <div className="logo" />
+                    <AdminHeader></AdminHeader>
                 </Header>
                 <Layout className="containers">
                     <Sider width={200} style={{ background: '#fff' }}>
@@ -47,10 +77,9 @@ class Router extends Component {
                             style={{ height: '100%', borderRight: 0 }}
                             onClick={this.handleRoute}
                         >
-                            <Menu.Item key="/magazine">电子刊管理</Menu.Item>
-                            <Menu.Item key="/order">订单管理</Menu.Item>
-                            <Menu.Item key="/subscribe">订阅管理</Menu.Item>
-                            <Menu.Item key="/system">系统管理</Menu.Item>
+                            { menuList.map((item, index) => (
+                                <Menu.Item key={item.key}>{item.icon}{item.label}</Menu.Item>
+                            ))}
                         </Menu>
                     </Sider>
                     <Layout style={{ padding: '0 12px 12px' }}>
@@ -64,21 +93,10 @@ class Router extends Component {
                                 padding: 24,
                                 margin: 0,
                                 minHeight: 280,
+                                overflowY: 'auto',
                             }}
                         >
-                            <div className='content'>
-                                <Switch>
-                                    <Route exact path='/' render={() => (
-                                        <Redirect to="/magazine" />
-                                    )}>
-                                    </Route>
-                                    <Route exact path='/magazine' component={Magazine}></Route>
-                                    <Route exact path='/order' component={Order}></Route>
-                                    <Route exact path='/subscribe' component={Subscribe}></Route>
-                                    <Route exact path='/system' component={System}></Route>
-                                    <Redirect to={'/404'}></Redirect>
-                                </Switch>
-                            </div>
+                            <Routes></Routes>
                         </Content>
                     </Layout>
                 </Layout>

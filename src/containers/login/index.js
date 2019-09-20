@@ -4,6 +4,8 @@ import { Form, Icon, Input, Button } from 'antd';
 import { Storage } from '@utils'
 import './index.less'
 
+import { User } from '@services'
+
 
 
 class NormalLoginForm extends Component {
@@ -17,6 +19,9 @@ class NormalLoginForm extends Component {
   };
 
   login = (data) => {
+    User.login(data).then(res => {
+      console.log(data)
+    })
     Storage.set('adminToken', data)
     this.props.history.push('/magazine')
   }

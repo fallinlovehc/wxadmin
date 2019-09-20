@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Tag, Divider, Table, Form } from 'antd'
+import { Link } from 'react-router-dom'
+import { Tag, Table } from 'antd'
 
 import Search from '@components/Search'
 
@@ -9,7 +10,7 @@ class System extends Component {
       title: '会员号',
       dataIndex: 'orderSeq',
       key: 'orderSeq',
-      render: text => <a>{text}</a>,
+      render: text => <Link>{text}</Link>,
     },
     {
       title: '会员名',
@@ -51,7 +52,7 @@ class System extends Component {
       key: 'action',
       render: (text, record) => (
         <span>
-          <a>详情</a>
+          <Link>详情</Link>
         </span>
       ),
     },

@@ -1,37 +1,48 @@
 import React, { Component } from 'react';
-import { Tag, Divider, Table, Form } from 'antd'
-
+import { Link, withRouter } from 'react-router-dom'
+import { Table, Button, Icon } from 'antd'
+import { Magazine } from '@services'
+import moment from 'moment'
 import Search from '@components/Search'
 
-class Magazine extends Component {
+class MagazinePage extends Component {
   columns = [
     {
       title: '电子刊号',
-      dataIndex: 'orderSeq',
-      key: 'orderSeq',
-      render: text => <a>{text}</a>,
+      dataIndex: 'bookCode',
+      key: 'bookCode',
+      // render: text => <Link>{text}</Link>,
     },
     {
       title: '电子刊名',
-      dataIndex: 'orderName',
-      key: 'orderName',
+      dataIndex: 'bookTitle',
+      key: 'bookTitle',
     },
     {
       title: '发行日期',
-      dataIndex: 'mobiie',
-      key: 'mobiie',
+      dataIndex: 'sellStartTime',
+      key: 'sellStartTime',
+      render: text => moment(Date(text)).format('YYYY-MM-DD HH:mm:ss')
     },
     {
-      title: '状态',
-      key: 'tags',
-      dataIndex: 'tags',
+      title: '期号',
+      key: 'issueNo',
+      dataIndex: 'issueNo',
+    },
+    {
+      title: '缩略图',
+      key: 'bookCoverUrl',
+      dataIndex: 'bookCoverUrl',
+      render: (text, record) => (
+        <img style={{width: 50}} src={text} alt={record.bookTitle}/>
+      )
     },
     {
       title: '操作',
       key: 'action',
       render: (text, record) => (
         <span>
-          <a>详情</a>
+          <Link to={`/magazine/${record.bookCode}`}>详情</Link>
         </span>
       ),
     },
@@ -40,23 +51,18 @@ class Magazine extends Component {
   searchColumn = [
     {
       label: '电子刊号',
-      field: 'orderSeq',
-      key: 'orderSeq',
+      field: 'bookCode',
+      key: 'bookCode',
       type: 'input',
     }, {
       label: '电子刊名',
-      field: 'orderName',
-      key: 'orderName',
+      field: 'bookTitle',
+      key: 'bookTitle',
       type: 'input',
     }, {
       label: '发行日期',
-      field: 'mobile',
-      key: 'mobile',
-      type: 'input',
-    }, {
-      label: '状态',
-      field: 'test',
-      key: 'test',
+      field: 'sellStartTime',
+      key: 'sellStartTime',
       type: 'input',
     }
   ]
@@ -64,26 +70,8 @@ class Magazine extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [
-        {
-          orderSeq: 'od2132312',
-          orderName: '华晨宇电子刊',
-          mobiie: '2012-12-12',
-          tags: '在售',
-        },
-        {
-          orderSeq: 'od2132312',
-          orderName: '华晨宇电子刊',
-          mobiie: '2012-12-12',
-          tags: '在售',
-        },
-        {
-          orderSeq: 'od2132312',
-          orderName: '华晨宇电子刊',
-          mobiie: '2012-12-12',
-          tags: '在售',
-        },
-      ]
+      data: [],
+      loading: true,
     }
   }
 
@@ -91,21 +79,50 @@ class Magazine extends Component {
     console.log(data)
   }
 
+  list = () => {
+    Magazine.list().then(res => {
+      console.log(res)
+      if (res.code === 'Z000') {
+        this.setState({
+          data: res.result,
+          loading: false,
+        });
+      }
+    }).catch(err => {
+
+    })
+  }
+
+  handleAdd = () => {
+    this.props.history.push('/magazine/add')
+  }
+
+  componentDidMount() {
+    this.list();
+  }
+
   render() {
-    const { data } = this.state;
+    const { 
+      data,
+      loading,
+    } = this.state;
     return (
       <div>
         <Search
           column={this.searchColumn}
           onSubmit={this.onSubmit}
         ></Search>
+        <div>
+          <Button type="primary" icon="plus" onClick={this.handleAdd}>新增</Button>
+        </div>
         <Table 
           columns={this.columns}
           dataSource={data}
+          loading={loading}
           rowKey={(record, index) => (index.toString())} />
       </div>
     );
   }
 }
 
-export default Magazine;
+export default withRouter(MagazinePage);

@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-
 import { Form, Row, Col, Input, Button, Icon } from 'antd';
 import './index.less'
 
-class Search extends React.Component {
+class Search extends Component {
     state = {
         expand: false,
     };

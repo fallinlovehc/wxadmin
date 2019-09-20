@@ -1,3 +1,7 @@
+body{
+    overflow: hidden;
+}
+
 .containers{
     height: calc(~'100vh - 50px');
 }
@@ -5,6 +9,7 @@
 .header{
     height: 50px;
     background-color: #073c65;
+    padding-left: 24px;
 }
 
 .ant-menu-dark, .ant-menu-dark .ant-menu-sub{
@@ -14,5 +19,31 @@
 .ant-menu-dark.ant-menu-inline .ant-menu-item{
     &:first-of-type{
         margin-top: 0;
+    }
+}
+
+.ant-table-wrapper{
+    margin-top: 12px;
+}
+
+.pointer{
+    cursor: pointer;
+    user-select: none;
+}
+
+.fl{
+    float: left;
+}
+
+.fr{
+    float: right;
+}
+
+.form-default{
+    max-width: 600px;
+    .form-title{
+        font-size: 20px;
+        color: #000;
+        margin-bottom: 16px;
     }
 }

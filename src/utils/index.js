@@ -1,10 +1,10 @@
 const Storage = {
     set: function (key, value) {
         let curTime = new Date().getTime();
-        localStorage.setItem(key, JSON.stringify({ data: value, time: curTime }));
+        sessionStorage.setItem(key, JSON.stringify({ data: value, time: curTime }));
     },
     get: function (key) {
-        let data = localStorage.getItem(key);
+        let data = sessionStorage.getItem(key);
         let dataObj = JSON.parse(data);
         if (data != null) {
             return dataObj.data;
@@ -13,13 +13,25 @@ const Storage = {
         }
     },
     remove: function (key) {
-        if (localStorage.getItem(key)) {
-            localStorage.removeItem(key)
+        if (sessionStorage.getItem(key)) {
+            sessionStorage.removeItem(key)
         }
     }
 };
 
+
+let BASE_URL;  // api调用baseUrl
+
+if (process.env.NODE_ENV === 'development') {
+
+    BASE_URL = 'http://10.200.114.35:8001';
+
+} else if (process.env.NODE_ENV === 'production') {
+    // 生产环境
+    BASE_URL = 'http://10.200.114.35:8001';
+}
+
 export {
-    Storage,
+    Storage, BASE_URL
 }
 export default {}
